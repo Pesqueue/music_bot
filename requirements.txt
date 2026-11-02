@@ -1,6 +1,3 @@
-aiogram
-yt-dlp
-imageio-ffmpeg
 aiogram>=3.0.0
 yt-dlp @ https://github.com/yt-dlp/yt-dlp/archive/master.tar.gz
 imageio-ffmpeg
