@@ -250,22 +250,34 @@ async def remove_from_fav(callback: types.CallbackQuery):
 
 
 # ================= ЗАПУСК =================
-async def main():
-    print("🚀 Музыкальный бот (YouTube + SoundCloud) запущен!")
-    # Запускаем веб-сервер для Render
-    asyncio.create_task(web_server())
-    await dp.start_polling(bot)
-    # ================= МИНИ-СЕРВЕР ДЛЯ RENDER (WEB SERVICE) =================
+import os
 from aiohttp import web
+import asyncio
 
+# Простой веб-сервер, который сразу отвечает Render, что порт открыт
 async def handle(request):
-    return web.Response(text="Music Bot is running!")
+    return web.Response(text="Bot is alive!")
 
-async def web_server():
+async def start_web_server():
     app = web.Application()
-    app.add_routes([web.get('/', handle)])
+    app.add_routes([web.get("/", handle)])
     runner = web.AppRunner(app)
     await runner.setup()
+    # Render передает свой порт через переменные окружения, по умолчанию берем 10000
     port = int(os.environ.get("PORT", 10000))
-    site = web.TCPSite(runner, '0.0.0.0', port)
+    site = web.TCPSite(runner, "0.0.0.0", port)
     await site.start()
+    print(f"🌐 Веб-сервер запущен на порту {port}")
+
+async def main():
+    # Сначала запускаем веб-сервер для Render, чтобы он сразу видел порт
+    await start_web_server()
+    print("🚀 Музыкальный бот запущен и слушает Telegram!")
+    # Затем запускаем самого бота
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print(f"❌ Ошибка при запуске: {e}")
