@@ -270,6 +270,11 @@ async def start_web_server():
     print(f"🌐 Веб-сервер запущен на порту {port}")
 
 async def main():
+    import subprocess
+import sys
+
+# Принудительное обновление yt-dlp при каждом запуске бота
+subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"])
     # Сначала запускаем веб-сервер для Render, чтобы он сразу видел порт
     await start_web_server()
     print("🚀 Музыкальный бот запущен и слушает Telegram!")
