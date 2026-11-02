@@ -270,23 +270,12 @@ async def start_web_server():
     print(f"🌐 Веб-сервер запущен на порту {port}")
 
 async def main():
-   async def main():
-    # 1. Принудительно обновляем yt-dlp прямо при старте
-    import subprocess
-    import sys
-    try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"])
-        print("✅ yt-dlp успешно обновлен до свежей версии!")
-    except Exception as e:
-        print(f"⚠️ Не удалось обновить yt-dlp автоматически: {e}")
-
-    # 2. Сначала запускаем веб-сервер для Render
+   # 1. Сначала запускаем веб-сервер для Render, чтобы он сразу увидел порт
     await start_web_server()
     print("🚀 Музыкальный бот запущен и слушает Telegram!")
     
-    # 3. Затем запускаем самого бота
+    # 2. Затем запускаем самого бота
     await dp.start_polling(bot)
-
 if __name__ == "__main__":
     try:
         asyncio.run(main())
