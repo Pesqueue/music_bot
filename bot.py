@@ -252,7 +252,20 @@ async def remove_from_fav(callback: types.CallbackQuery):
 # ================= ЗАПУСК =================
 async def main():
     print("🚀 Музыкальный бот (YouTube + SoundCloud) запущен!")
+    # Запускаем веб-сервер для Render
+    asyncio.create_task(web_server())
     await dp.start_polling(bot)
+    # ================= МИНИ-СЕРВЕР ДЛЯ RENDER (WEB SERVICE) =================
+from aiohttp import web
 
-if __name__ == "__main__":
-    asyncio.run(main())
+async def handle(request):
+    return web.Response(text="Music Bot is running!")
+
+async def web_server():
+    app = web.Application()
+    app.add_routes([web.get('/', handle)])
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.environ.get("PORT", 10000))
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    await site.start()
